@@ -1,36 +1,46 @@
 #pragma once
+#include <cstdio>
 #include <iostream>
-#include <iomanip>
-#include <initializer_list>
 
-template <typename T>
-struct Elem {
+template<class T>
+class Stack
+{
 public:
-    T x;
-    Elem next;
-};
+	Stack();
+	Stack(const Stack& stack_cop);
+	Stack(Stack&& stack_move) noexcept;
+	Stack& operator=(Stack&& stack_move) noexcept;
+	Stack& operator=(const Stack& stack_cop);
 
-template <typename T>
-class Stack {
+	bool operator==(const Stack& stack_cop) const noexcept;
+	bool operator!=(const Stack& stack_cop);
+	void operator<<(const T& elem);
+	void operator>>(const T& elem);
+
+	template <typename T> friend  std::ostream& operator<< (std::ostream&, const Stack<T>&) noexcept;
+
+	Stack(int capacity);
+	~Stack();
+
+	void push(const T value);
+	T pop();
+	T check_pop();
+
+	int getSize() const noexcept;
+	void clear() noexcept;
+	bool empty() const noexcept;
+	void top(const T elem);
+	void swap(T& elem);
+
+
+	void printArray() const noexcept;
 private:
-    //int size; // размер стека
-    Elem<T>* head; // вершина стека
-public:
-    Stack();// конструктор по умолчанию
-    Stack(const Stack& stack);// конструктор копировани€
-    Stack(const Stack&& stack);// конструктор перемещени€
-    Stack(initializer_list<T> list); // конструктор со списком инициализации
-    ~Stack(); // деструктор
-    bool push(const T); // поместить элемент в стек
-    T pop(); // изъ€ть элемент из стека
-    const T& check_pop() const; // вызов элемента без изъ€тие из стека
-    void clear(); // очистка стека
-    bool empty(); // пустой стек?
-    int size(); // размер стека
-    friend Stack<T> operator=(); // перемещение и копирование
-    friend void operator<<(Stack& stack, T el); // добавление элемента
-    friend ostream& operator<<(ostream& out, const Stack& stack);
-    friend void operator>>(T el); // изъ€тие элемента
-    friend bool operator==();
-    friend bool operator!=();
+	int size;
+	int capacity;
+	T* stack;
 };
+
+template <typename T> std::ostream& operator<< (std::ostream& os, const Stack<T>& st) noexcept {
+	st.printArray();
+	return os;
+}
